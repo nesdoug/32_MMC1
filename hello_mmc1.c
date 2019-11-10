@@ -215,6 +215,7 @@ void main (void) {
 	set_prg_bank(0); 
 	vram_adr(NTADR_A(1,20));
 	vram_write(TEXT0,sizeof(TEXT0)); // this array is in bank 0
+	
 	ppu_on_all(); //	turn on screen
 	
 	while (1){ // infinite loop

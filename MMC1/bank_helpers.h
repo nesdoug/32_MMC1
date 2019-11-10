@@ -1,7 +1,7 @@
 // Contains functions to help with working with multiple PRG/CHR banks
 
 // Maximum level of recursion to allow with banked_call and similar functions.
-#define MAX_BANK_DEPTH 16
+#define MAX_BANK_DEPTH 10
 
 unsigned char bankLevel;
 unsigned char bankBuffer[MAX_BANK_DEPTH];
@@ -12,12 +12,13 @@ unsigned char bankBuffer[MAX_BANK_DEPTH];
 // Switch to another bank and call this function.
 // Note: Using banked_call to call a second function from within  
 // another banked_call is safe. This will break if you nest more  
-// than 16 calls deep.
+// than 10 calls deep.
 void banked_call(unsigned char bankId, void (*method)(void));
 
 
 // Internal function used by banked_call(), don't call this directly.
-// Switch to the given bank, and keep track of the current bank, so that we may jump back to it as needed.
+// Switch to the given bank, and keep track of the current bank, so 
+// that we may jump back to it as needed.
 void bank_push(unsigned char bankId);
 
 

@@ -36,11 +36,7 @@ FT_SFX_ENABLE   = 1		;undefine to exclude all sound effects code
 	.import	__RODATA_LOAD__ ,__RODATA_RUN__ ,__RODATA_SIZE__
 	.import NES_MAPPER, NES_PRG_BANKS, NES_CHR_BANKS, NES_MIRRORING
 
-	.importzp _PAD_STATE, _PAD_STATET ;added
     .include "zeropage.inc"
-
-;	.import _set_prg_bank, _get_prg_bank, _set_chr_bank_0, _set_chr_bank_1
-;	.import _set_mirroring, _set_mmc1_ctrl
 
 
 

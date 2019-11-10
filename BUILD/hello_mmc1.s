@@ -117,7 +117,7 @@ _text:
 _bankLevel:
 	.res	1,$00
 _bankBuffer:
-	.res	16,$00
+	.res	10,$00
 .segment	"ZEROPAGE"
 _arg1:
 	.res	1,$00

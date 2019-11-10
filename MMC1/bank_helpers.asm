@@ -22,6 +22,7 @@ _set_prg_bank:
 ; returns the current bank at $8000-bfff	
 _get_prg_bank:
     lda BP_BANK
+	ldx #0
     rts
 
 ; sets the first CHR bank
