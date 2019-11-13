@@ -179,6 +179,10 @@ void main (void) {
 	
 	song = 0;
 	music_play(song);
+	
+	// clear the WRAM, not done by the init code
+	// memfill(void *dst,unsigned char value,unsigned int len);
+	memfill(wram_array,0,0x2000);
 
 	wram_array[0] = 'A'; // put some values at $6000-7fff
 	wram_array[2] = 'C'; // for later testing

@@ -27,6 +27,7 @@
 	.import		_vram_adr
 	.import		_vram_put
 	.import		_vram_write
+	.import		_memfill
 	.import		_get_pad_new
 	.export		_bankLevel
 	.export		_bankBuffer
@@ -684,6 +685,21 @@ L0012:	rts
 ;
 	jsr     _music_play
 ;
+; memfill(wram_array,0,0x2000);
+;
+	jsr     decsp3
+	lda     #<(_wram_array)
+	ldy     #$01
+	sta     (sp),y
+	iny
+	lda     #>(_wram_array)
+	sta     (sp),y
+	lda     #$00
+	tay
+	sta     (sp),y
+	ldx     #$20
+	jsr     _memfill
+;
 ; wram_array[0] = 'A'; // put some values at $6000-7fff
 ;
 	lda     #$41
@@ -821,7 +837,7 @@ L0012:	rts
 ;
 ; ppu_wait_nmi();
 ;
-L0108:	jsr     _ppu_wait_nmi
+L010C:	jsr     _ppu_wait_nmi
 ;
 ; pad1 = pad_poll(0);
 ;
@@ -838,7 +854,7 @@ L0108:	jsr     _ppu_wait_nmi
 ; if(pad1_new & PAD_START){
 ;
 	and     #$10
-	beq     L014A
+	beq     L014E
 ;
 ; ++char_state;
 ;
@@ -861,9 +877,9 @@ L0108:	jsr     _ppu_wait_nmi
 ;
 ; if(pad1_new & PAD_A){
 ;
-L014A:	lda     _pad1_new
+L014E:	lda     _pad1_new
 	and     #$80
-	beq     L014B
+	beq     L014F
 ;
 ; ++song;
 ;
@@ -881,9 +897,9 @@ L014A:	lda     _pad1_new
 ;
 ; if(pad1_new & PAD_B){
 ;
-L014B:	lda     _pad1_new
+L014F:	lda     _pad1_new
 	and     #$40
-	beq     L014C
+	beq     L0150
 ;
 ; ++sound;
 ;
@@ -903,9 +919,9 @@ L014B:	lda     _pad1_new
 ;
 ; if(pad1_new & PAD_SELECT){
 ;
-L014C:	lda     _pad1_new
+L0150:	lda     _pad1_new
 	and     #$20
-	beq     L0108
+	beq     L010C
 ;
 ; ++pauze;
 ;
@@ -923,7 +939,7 @@ L014C:	lda     _pad1_new
 ;
 ; while (1){ // infinite loop
 ;
-	jmp     L0108
+	jmp     L010C
 
 .endproc
 
