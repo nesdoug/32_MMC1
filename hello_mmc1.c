@@ -1,5 +1,5 @@
 /*	example of MMC1 for cc65
- *	Doug Fraker 2019
+ *	Doug Fraker 2019, 2022
  */	
  
 #include "LIB/neslib.h"
@@ -67,8 +67,7 @@ void function_bank0(void){
 #pragma code-name ("BANK1")
 const unsigned char TEXT1[]="BANK1";
 
-void function_bank2(void);	// a prototype can be anywhere
-							// as long as it's above the code that uses it
+void function_bank2(void);	// prototype 
 
 void function_bank1(void){
 	ppu_off();
@@ -223,6 +222,22 @@ void main (void) {
 		
 		pad1 = pad_poll(0);
 		pad1_new = get_pad_new(0);
+		
+		/*
+		// test of the split screen CHR change
+		// simulate split screen wait
+		for(arg1 = 0; arg1 < 240; arg1++)
+		{
+			arg2++;
+			arg2++;
+		}
+		for(arg1 = 0; arg1 < 240; arg1++)
+		{
+			arg2++;
+			arg2++;
+		}
+		split_chr_bank_0(3); // change CHR bank for lower 1/2
+		*/
 		
 		if(pad1_new & PAD_START){
 			++char_state;

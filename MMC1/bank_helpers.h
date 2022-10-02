@@ -39,11 +39,42 @@ unsigned char __fastcall__ get_prg_bank(void);
 
 
 // Set the current 1st 4k chr bank to the bank with this id.
+// this will take effect at the next frame
+// and automatically rewrite at the top of every frame
 void __fastcall__ set_chr_bank_0(unsigned char bank_id);
 
 
 // Set the current 2nd 4k chr bank to the bank with this id.
+// this will take effect at the next frame
+// and automatically rewrite at the top of every frame
 void __fastcall__ set_chr_bank_1(unsigned char bank_id);
+
+
+// Set the current 1st 4k chr bank to the bank with this id.
+// this will take effect immediately, such as for mid screen changes
+// but then will be overwritten by the set_chr_bank_0() value
+// in the next frame.
+void __fastcall__ split_chr_bank_0(unsigned char bank_id);
+
+
+// Set the current 2nd 4k chr bank to the bank with this id.
+// this will take effect immediately, such as for mid screen changes
+// but then will be overwritten by the set_chr_bank_1() value
+// in the next frame.
+void __fastcall__ split_chr_bank_1(unsigned char bank_id);
+
+
+// if you need to swap CHR banks mid screen, perhaps you need more
+// than 256 unique tiles, first write (one time only) the CHR bank
+// for the top of the screen with set_chr_bank_0().
+// Then, every frame, time a mid screen split (probably with
+// a sprite zero hit) and then change the CHR bank with
+// split_chr_bank_0().
+// 
+// example ---- in game loop
+// split(0); ---- wait for sprite zero hit, set X scroll to 0
+// split_chr_bank_0(6) ---- change CHR bank to #6
+
 
 
 #define MIRROR_LOWER_BANK 0
@@ -53,20 +84,12 @@ void __fastcall__ set_chr_bank_1(unsigned char bank_id);
 
 // Set the current mirroring mode. Your options are MIRROR_LOWER_BANK, 
 // MIRROR_UPPER_BANK, MIRROR_HORIZONTAL, and MIRROR_VERTICAL.
+// LOWER and UPPER are single screen modes
 void __fastcall__ set_mirroring(unsigned char mirroring);
 
 
 // Set all 5 bits of the $8000 MMC1 Control register (not recommended)
 void __fastcall__ set_mmc1_ctrl(unsigned char value);
-
-
-// Set what chr bank to set at the top of the screen, for a split screen.
-void __fastcall__ set_nmi_chr_tile_bank(unsigned char bank);
-
-
-// Don't change the chr bank at the top of the screen.
-void __fastcall__ unset_nmi_chr_tile_bank(void);
-
 
 
 // some things deleted

@@ -149,31 +149,9 @@ _exit:
     stx DMC_FREQ
     stx PPU_CTRL		;no NMI
 	
-	
-; MMC1 reset
+;	MMC1 registers writes moved below
 
-	lda #$80 ; reset all latches
-	sta $8000
-	sta $a000
-	sta $c000
-	sta $e000
-	
-	lda #$1f 	; set control to horizontal mirroring, 
-				; last bank $c000, $8000 swappable
-				; CHR in 4k and 4k mode
-	jsr _set_mmc1_ctrl
-	
-	lda #$00 ;CHR bank #0 for first tileset
-	jsr _set_chr_bank_0
-	
-	lda #$01 ;CHR bank #1 for second tileset
-	jsr _set_chr_bank_1
-	
-	lda #$00 ;PRG bank #0 at $8000
-	jsr _set_prg_bank
-	
-	
-	;x is still zero
+	ldx #0 ; making sure
 
 initPPU:
     bit PPU_STATUS
@@ -238,6 +216,32 @@ clearRAM:
 ;	jsr	initlib
 ; removed. this called the CONDES function
 
+
+;reset the MMC1 registers
+
+	lda #$80 ; reset shift register
+	sta $8000
+; there is only 1 shift register
+; shared by all the mmc1 registers
+; bit 7 write resets it for all
+
+	lda #$1f 	; set control to horizontal mirroring, 
+;				; last bank $c000, $8000 swappable
+;				; CHR in 4k and 4k mode
+	jsr _set_mmc1_ctrl
+	
+	lda #$00 ;CHR bank #0 for first tileset
+	jsr _set_chr_bank_0
+	
+	lda #$01 ;CHR bank #1 for second tileset
+	jsr _set_chr_bank_1
+	
+	lda #$00 ;PRG bank #0 at $8000
+	jsr _set_prg_bank
+
+
+
+
 	lda #%10000000
 	sta <PPU_CTRL_VAR
 	sta PPU_CTRL		;enable NMI
@@ -294,9 +298,6 @@ detectNTSC:
 	
 	lda #$00 ;PRG bank #0 at $8000, back to basic
 	jsr _set_prg_bank
-	
-	;for split screens with different CHR bank at top... disable it
-	jsr _unset_nmi_chr_tile_bank
 
 	jmp _main			;no parameters
 	

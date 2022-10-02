@@ -34,6 +34,7 @@
 	.export		_bank_push
 	.export		_bank_pop
 	.import		_set_prg_bank
+	.import		_get_prg_bank
 	.import		_set_chr_bank_0
 	.export		_arg1
 	.export		_arg2
@@ -194,12 +195,18 @@ _wram_array:
 ;
 	jsr     pusha
 ;
-; bankBuffer[bankLevel] = bankId;
+; bankBuffer[bankLevel] = get_prg_bank();
 ;
+	lda     #<(_bankBuffer)
+	ldx     #>(_bankBuffer)
+	clc
+	adc     _bankLevel
+	bcc     L000B
+	inx
+L000B:	jsr     pushax
+	jsr     _get_prg_bank
 	ldy     #$00
-	lda     (sp),y
-	ldy     _bankLevel
-	sta     _bankBuffer,y
+	jsr     staspidx
 ;
 ; ++bankLevel;
 ;
@@ -228,34 +235,24 @@ _wram_array:
 .segment	"CODE"
 
 ;
+; if (bankLevel != 0) {
+;
+	lda     _bankLevel
+	beq     L0011
+;
 ; --bankLevel;
 ;
 	dec     _bankLevel
 ;
-; if (bankLevel > 0) {
+; set_prg_bank(bankBuffer[bankLevel]);
 ;
-	beq     L0012
-;
-; set_prg_bank(bankBuffer[bankLevel-1]);
-;
-	ldx     #$00
-	lda     _bankLevel
-	sec
-	sbc     #$01
-	bcs     L0017
-	dex
-L0017:	sta     ptr1
-	txa
-	clc
-	adc     #>(_bankBuffer)
-	sta     ptr1+1
-	ldy     #<(_bankBuffer)
-	lda     (ptr1),y
+	ldy     _bankLevel
+	lda     _bankBuffer,y
 	jmp     _set_prg_bank
 ;
 ; }
 ;
-L0012:	rts
+L0011:	rts
 
 .endproc
 
