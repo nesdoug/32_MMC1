@@ -7,10 +7,24 @@ it could crash the game. Fixed.
 last pop wasn't setting the default
 PRG bank back into place. Fixed.
 
-Minor other changes (crt0.s)
+Minor other changes
+-crt0.s
+-neslib.s
 
-if an NMI interrupts a CHR bank change
-it could also cause problems. You should
-only change CHR banks near the beginning
-of the frame (right after ppu_wait_nmi or
-ppu_wait_frame or ppu_off or ppu_on...)
+set_nmi_chr_tile_bank() and
+unset_nmi_chr_tile_bank() have been removed.
+
+CHR banks will automatically be set at
+the top of each frame.
+
+If you need to do a split screen with CHR
+bank changes, then after the sprite zero hit
+use these functions...
+
+split_chr_bank_0() or split_chr_bank_1()
+
+which will temporarily change the CHR bank
+until the next NMI is reached.
+
+
+
