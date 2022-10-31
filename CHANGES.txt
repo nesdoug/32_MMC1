@@ -26,5 +26,3 @@ split_chr_bank_0() or split_chr_bank_1()
 which will temporarily change the CHR bank
 until the next NMI is reached.
 
-
-
